@@ -168,9 +168,6 @@ public class PathingMain extends PApplet
 			//example - replace with dfs	
          moveOnce(wPos, grid, path);
 
-         /* While moveOnce == false
-         * moveOnce(wPos, grid, path);
-         * */
       }
       else if (key == 'p')
       {
@@ -224,60 +221,42 @@ public class PathingMain extends PApplet
 
 
       // ---- BASE CASE ----- //
-      // Checks if neighbors are adjacent to goal and returns true if they are
+      // Checks if neighbors are adjacent to goal and returns true if they are,
+      // marks them as searched if they are not
 
-      //test if right neighbor is a valid grid cell
       if (rightN.isValidPoint(grid)) {
-         //check if my right neighbor is the goal
          if (grid[rightN.y][rightN.x] == GridValues.GOAL) {
             path.add(0, rightN);
             return true;
          }
-         //set right neighbor as searched
          grid[rightN.y][rightN.x] = GridValues.SEARCHED;
-         // test if left neighbor is a valid grid cell
       } else if (leftN.isValidPoint(grid)){
          if (grid[leftN.y][leftN.x] == GridValues.GOAL) {
             path.add(0, leftN);
             return true;
          }
          grid[leftN.y][leftN.x] = GridValues.SEARCHED;
-         // test if lower neighbor is a valid grid cell
       }else if (downN.isValidPoint(grid)){
          if (grid[downN.y][downN.x] == GridValues.GOAL) {
             path.add(0, downN);
             return true;
          }
-         // set lower neighbor as searched
          grid[downN.y][downN.x] = GridValues.SEARCHED;
-
-         // check if upper neighbor is valid grid cell
       } else if (upN.isValidPoint(grid)) {
             path.add(0, upN);
             return true;
          }
-         // set it as searched
-         grid[upN.y][upN.x] = GridValues.SEARCHED;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+      grid[upN.y][upN.x] = GridValues.SEARCHED;
 
 
 
 
       // if none of the adjacent squares are the goal: return false
       // change with recursive call to itself on a different wPos
+      /* if right node is an open space, change current pos to right node and rerun moveOnce
+      *  if right node is blocked, try down, then left, then up
+      *     if all nodes are blocked, return false?
+      * */
 
 
       return false;
