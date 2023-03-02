@@ -229,24 +229,21 @@ public class PathingMain extends PApplet
             path.add(0, rightN);
             return true;
          }
-         grid[rightN.y][rightN.x] = GridValues.SEARCHED;
       } else if (leftN.isValidPoint(grid)){
          if (grid[leftN.y][leftN.x] == GridValues.GOAL) {
             path.add(0, leftN);
             return true;
          }
-         grid[leftN.y][leftN.x] = GridValues.SEARCHED;
       }else if (downN.isValidPoint(grid)){
          if (grid[downN.y][downN.x] == GridValues.GOAL) {
             path.add(0, downN);
             return true;
          }
-         grid[downN.y][downN.x] = GridValues.SEARCHED;
       } else if (upN.isValidPoint(grid)) {
             path.add(0, upN);
             return true;
          }
-      grid[upN.y][upN.x] = GridValues.SEARCHED;
+      grid[pos.y][pos.x] = GridValues.SEARCHED;
 
 
 
@@ -258,8 +255,14 @@ public class PathingMain extends PApplet
       *     if all nodes are blocked, return false?
       * */
 
-
-      return false;
+      if (withinBounds(rightN, grid) &&
+              grid[rightN.y][rightN.x] != PathingMain.GridValues.OBSTACLE &&
+              grid[rightN.y][rightN.x] != PathingMain.GridValues.SEARCHED){
+         if (!moveOnce(rightN, grid, path)){
+            return false;
+         }
+      }
+      return true;
    }
 
    /* To do this recursively:
