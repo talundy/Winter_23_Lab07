@@ -261,7 +261,22 @@ public class PathingMain extends PApplet
          if (!moveOnce(rightN, grid, path)){
             return false;
          }
+      } else if (withinBounds(leftN, grid) &&
+              grid[leftN.y][leftN.x] != PathingMain.GridValues.OBSTACLE &&
+              grid[leftN.y][leftN.x] != PathingMain.GridValues.SEARCHED){
+         if (!moveOnce(leftN, grid, path)){
+            return false;
+         }
+      } else if (withinBounds(downN, grid) &&
+              grid[downN.y][downN.x] != PathingMain.GridValues.OBSTACLE &&
+              grid[downN.y][downN.x] != PathingMain.GridValues.SEARCHED){
+         if (!moveOnce(downN, grid, path)){
+            return false;
+         }
       }
+
+
+
       return true;
    }
 
