@@ -258,21 +258,19 @@ public class PathingMain extends PApplet
       if (withinBounds(rightN, grid) &&
               grid[rightN.y][rightN.x] != PathingMain.GridValues.OBSTACLE &&
               grid[rightN.y][rightN.x] != PathingMain.GridValues.SEARCHED){
-         if (!moveOnce(rightN, grid, path)){
-            return false;
-         }
+         return moveOnce(rightN, grid, path);
       } else if (withinBounds(leftN, grid) &&
               grid[leftN.y][leftN.x] != PathingMain.GridValues.OBSTACLE &&
               grid[leftN.y][leftN.x] != PathingMain.GridValues.SEARCHED){
-         if (!moveOnce(leftN, grid, path)){
-            return false;
-         }
+         return moveOnce(leftN, grid, path);
       } else if (withinBounds(downN, grid) &&
               grid[downN.y][downN.x] != PathingMain.GridValues.OBSTACLE &&
               grid[downN.y][downN.x] != PathingMain.GridValues.SEARCHED){
-         if (!moveOnce(downN, grid, path)){
-            return false;
-         }
+         return moveOnce(downN, grid, path);
+      } else if (withinBounds(upN, grid) &&
+              grid[upN.y][upN.x] != PathingMain.GridValues.OBSTACLE &&
+              grid[upN.y][upN.x] != PathingMain.GridValues.SEARCHED){
+         return moveOnce(upN, grid, path);
       }
 
 
