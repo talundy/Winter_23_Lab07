@@ -16,4 +16,9 @@ public class Point
               grid[this.y][this.x] != PathingMain.GridValues.OBSTACLE &&
               grid[this.y][this.x] != PathingMain.GridValues.SEARCHED;
    }
+
+   @Override
+   public String toString(){
+      return ("(" + x + "," + y + ")");
+   }
 }

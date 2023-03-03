@@ -167,6 +167,9 @@ public class PathingMain extends PApplet
          path.clear();
 			//example - replace with dfs	
          moveOnce(wPos, grid, path);
+         for (String str : movementList){
+            System.out.println(str);
+         }
 
       }
       else if (key == 'p')
@@ -205,8 +208,12 @@ public class PathingMain extends PApplet
       }
 		return false;
    }*/
+    List<String> movementList = new ArrayList<>();
 
    private boolean moveOnce(Point pos, GridValues[][] grid, List<Point> path){
+
+
+
       try {
          Thread.sleep(200);
       } catch (Exception e) {
@@ -222,89 +229,60 @@ public class PathingMain extends PApplet
 
       // ---- BASE CASE ----- //
       // Checks if neighbors are adjacent to goal and returns true if they are,
-      // marks them as searched if they are not
+      // marks the current node as searched if they are not
 
       if (rightN.isValidPoint(grid)) {
          if (grid[rightN.y][rightN.x] == GridValues.GOAL) {
             path.add(0, rightN);
+            movementList.add("Goal Reached");
             return true;
          }
       } else if (leftN.isValidPoint(grid)){
          if (grid[leftN.y][leftN.x] == GridValues.GOAL) {
             path.add(0, leftN);
+            movementList.add("Goal Reached");
             return true;
          }
       }else if (downN.isValidPoint(grid)){
          if (grid[downN.y][downN.x] == GridValues.GOAL) {
             path.add(0, downN);
+            movementList.add("Goal Reached");
             return true;
          }
       } else if (upN.isValidPoint(grid)) {
             path.add(0, upN);
+            movementList.add("Goal Reached");
             return true;
          }
+      movementList.add("[Point " + pos.toString() + " searched.] ");
       grid[pos.y][pos.x] = GridValues.SEARCHED;
 
 
 
 
-      // if none of the adjacent squares are the goal: return false
-      // change with recursive call to itself on a different wPos
-      /* if right node is an open space, change current pos to right node and rerun moveOnce
-      *  if right node is blocked, try down, then left, then up
-      *     if all nodes are blocked, return false?
-      * */
 
+      /* ----------- RECURSIVE CALL ---------------*/
+      /* Starting with the immediate right node, recursively checks that node, then the adjacent, etc. until the goal is found.
+      * */
       if (withinBounds(rightN, grid) &&
               grid[rightN.y][rightN.x] != PathingMain.GridValues.OBSTACLE &&
               grid[rightN.y][rightN.x] != PathingMain.GridValues.SEARCHED){
          return moveOnce(rightN, grid, path);
-      } else if (withinBounds(leftN, grid) &&
-              grid[leftN.y][leftN.x] != PathingMain.GridValues.OBSTACLE &&
-              grid[leftN.y][leftN.x] != PathingMain.GridValues.SEARCHED){
-         return moveOnce(leftN, grid, path);
       } else if (withinBounds(downN, grid) &&
               grid[downN.y][downN.x] != PathingMain.GridValues.OBSTACLE &&
               grid[downN.y][downN.x] != PathingMain.GridValues.SEARCHED){
          return moveOnce(downN, grid, path);
+      } else if (withinBounds(leftN, grid) &&
+              grid[leftN.y][leftN.x] != PathingMain.GridValues.OBSTACLE &&
+              grid[leftN.y][leftN.x] != PathingMain.GridValues.SEARCHED){
+         return moveOnce(leftN, grid, path);
       } else if (withinBounds(upN, grid) &&
               grid[upN.y][upN.x] != PathingMain.GridValues.OBSTACLE &&
               grid[upN.y][upN.x] != PathingMain.GridValues.SEARCHED){
          return moveOnce(upN, grid, path);
       }
-
-
-
-      return true;
+      return false;
    }
-
-   /* To do this recursively:
-    * Issues: I need a convenient way to add each point to the path
-    *
-    * make this method return a boolean in order to be called recursively?
-    * use the moveOnce method in my implementation? or as the central method, to be called recursively?
-    * if moveOnce returns true, add to path?
-    *
-    * 3 conditions to stop: the node searched is out of bounds;
-    *                       the node searched is an obstacle;
-    *                       the node searched is the goal.
-    *
-    * 1 = (x, y-1)
-    * 2 = (x, y+1)
-    * 3 = (x+1, y)
-    * 4 = (x-1, y)
-    *
-    * if moveOnce(1, ...)
-    *     or moveOnce(2,...)
-    *     etc. returns True, add points to Path
-    *
-    *
-    *
-    *
-    * Base case: goal is reached: i.e. - goal is adjacent to current position pos
-    *            when goal is reached, we want to also add this to the path
-    *
-    * */
 
 
 
