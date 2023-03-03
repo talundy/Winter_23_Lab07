@@ -203,12 +203,13 @@ public class PathingMain extends PApplet
 
       /*Base Case - Goal has been reached*/
       if (grid[pos.y][pos.x] == GridValues.GOAL || goalReached) {
-         path.add(0, pos);
+         grid[pos.y][pos.x] = GridValues.SEARCHED;
          goalReached = true;
          return;
       }
 
       grid[pos.y][pos.x] = GridValues.SEARCHED;
+      path.add(0, pos);
       System.out.println("[Point " + pos + " searched.] ");
 
       Point rightN = new Point(pos.x + 1, pos.y);
