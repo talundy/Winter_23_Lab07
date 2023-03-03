@@ -167,10 +167,6 @@ public class PathingMain extends PApplet
          path.clear();
 			//example - replace with dfs	
          moveOnce(wPos, grid, path);
-         for (String str : movementList){
-            System.out.println(str);
-         }
-
       }
       else if (key == 'p')
       {
@@ -184,35 +180,19 @@ public class PathingMain extends PApplet
 		one direction for one tile - it mostly is for illustrating
 		how you might test the occupancy grid and add nodes to path!
 	*/
-   /*private boolean moveOnce(Point pos, GridValues[][] grid, List<Point> path)
+
+   static boolean withinBounds(Point p, GridValues[][] grid)
    {
-      try {
-         Thread.sleep(200);
-      } catch (Exception e) {}
-      redraw();
-
-      Point rightN = new Point(pos.x +1, pos.y );
-     
-		//test if this is a valid grid cell 
-		if (withinBounds(rightN, grid)  &&
-         grid[rightN.y][rightN.x] != GridValues.OBSTACLE && 
-         grid[rightN.y][rightN.x] != GridValues.SEARCHED)
-      {
-			//check if my right neighbor is the goal
-      	if (grid[rightN.y][rightN.x] == GridValues.GOAL) {
-         	path.add(0, rightN);
-         	return true;
-      	}
-			//set this value as searched
-      	grid[rightN.y][rightN.x] = GridValues.SEARCHED;
-      }
-		return false;
-   }*/
-    List<String> movementList = new ArrayList<>();
-
-   private boolean moveOnce(Point pos, GridValues[][] grid, List<Point> path){
+      return p.y >= 0 && p.y < grid.length &&
+              p.x >= 0 && p.x < grid[0].length;
+   }
 
 
+
+
+
+   boolean goalReached = false;
+   private void moveOnce(Point pos, GridValues[][] grid, List<Point> path) {
 
       try {
          Thread.sleep(200);
@@ -221,81 +201,40 @@ public class PathingMain extends PApplet
       }
       redraw();
 
-      Point rightN = new Point(pos.x + 1, pos.y );
-      Point leftN = new Point(pos.x - 1, pos.y );
-      Point upN = new Point(pos.x, pos.y - 1) ;
+      /*Base Case - Goal has been reached*/
+      if (grid[pos.y][pos.x] == GridValues.GOAL || goalReached) {
+         path.add(0, pos);
+         goalReached = true;
+         return;
+      }
+
+      grid[pos.y][pos.x] = GridValues.SEARCHED;
+      System.out.println("[Point " + pos + " searched.] ");
+
+      Point rightN = new Point(pos.x + 1, pos.y);
+      Point leftN = new Point(pos.x - 1, pos.y);
+      Point upN = new Point(pos.x, pos.y - 1);
       Point downN = new Point(pos.x, pos.y + 1);
 
-
-      // ---- BASE CASE ----- //
-      // Checks if neighbors are adjacent to goal and returns true if they are,
-      // marks the current node as searched if they are not
-
-      if (rightN.isValidPoint(grid)) {
-         if (grid[rightN.y][rightN.x] == GridValues.GOAL) {
-            path.add(0, rightN);
-            movementList.add("Goal Reached");
-            return true;
-         }
-      } else if (leftN.isValidPoint(grid)){
-         if (grid[leftN.y][leftN.x] == GridValues.GOAL) {
-            path.add(0, leftN);
-            movementList.add("Goal Reached");
-            return true;
-         }
-      }else if (downN.isValidPoint(grid)){
-         if (grid[downN.y][downN.x] == GridValues.GOAL) {
-            path.add(0, downN);
-            movementList.add("Goal Reached");
-            return true;
-         }
-      } else if (upN.isValidPoint(grid)) {
-            path.add(0, upN);
-            movementList.add("Goal Reached");
-            return true;
-         }
-      movementList.add("[Point " + pos.toString() + " searched.] ");
-      grid[pos.y][pos.x] = GridValues.SEARCHED;
-
-
-
-
-
-      /* ----------- RECURSIVE CALL ---------------*/
-      /* Starting with the immediate right node, recursively checks that node, then the adjacent, etc. until the goal is found.
-      * */
       if (withinBounds(rightN, grid) &&
               grid[rightN.y][rightN.x] != PathingMain.GridValues.OBSTACLE &&
-              grid[rightN.y][rightN.x] != PathingMain.GridValues.SEARCHED){
-         return moveOnce(rightN, grid, path);
-      } else if (withinBounds(downN, grid) &&
-              grid[downN.y][downN.x] != PathingMain.GridValues.OBSTACLE &&
-              grid[downN.y][downN.x] != PathingMain.GridValues.SEARCHED){
-         return moveOnce(downN, grid, path);
-      } else if (withinBounds(leftN, grid) &&
-              grid[leftN.y][leftN.x] != PathingMain.GridValues.OBSTACLE &&
-              grid[leftN.y][leftN.x] != PathingMain.GridValues.SEARCHED){
-         return moveOnce(leftN, grid, path);
-      } else if (withinBounds(upN, grid) &&
-              grid[upN.y][upN.x] != PathingMain.GridValues.OBSTACLE &&
-              grid[upN.y][upN.x] != PathingMain.GridValues.SEARCHED){
-         return moveOnce(upN, grid, path);
+              grid[rightN.y][rightN.x] != PathingMain.GridValues.SEARCHED) {
+         moveOnce(rightN, grid, path);
       }
-      return false;
-   }
-
-
-
-
-
-
-
-
-
-
-   static boolean withinBounds(Point p, GridValues[][] grid)
-   {
-      return p.y >= 0 && p.y < grid.length &&
-         p.x >= 0 && p.x < grid[0].length;
+      if (withinBounds(downN, grid) &&
+              grid[downN.y][downN.x] != PathingMain.GridValues.OBSTACLE &&
+              grid[downN.y][downN.x] != PathingMain.GridValues.SEARCHED) {
+         moveOnce(downN, grid, path);
+      }
+      if (withinBounds(leftN, grid) &&
+              grid[leftN.y][leftN.x] != PathingMain.GridValues.OBSTACLE &&
+              grid[leftN.y][leftN.x] != PathingMain.GridValues.SEARCHED) {
+         moveOnce(leftN, grid, path);
+      }
+      if (withinBounds(upN, grid) &&
+              grid[upN.y][upN.x] != PathingMain.GridValues.OBSTACLE &&
+              grid[upN.y][upN.x] != PathingMain.GridValues.SEARCHED) {
+         moveOnce(upN, grid, path);
+      }
    }
 }
